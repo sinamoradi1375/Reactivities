@@ -31,6 +31,15 @@ namespace API
             {
                 opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
             });
+            //start M3 E13 M2
+            services.AddCors(opt =>
+            {
+                opt.AddPolicy("CorsPolicy", policy =>
+                {
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
+                });
+            });
+            //end M3 E13 M2
             services.AddControllers();
         }
 
@@ -47,7 +56,9 @@ namespace API
             app.UseRouting();
 
             app.UseAuthorization();
-
+            //start M3 E13 M2
+            app.UseCors("CorsPolicy");
+            //end M3 E13 M2
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
