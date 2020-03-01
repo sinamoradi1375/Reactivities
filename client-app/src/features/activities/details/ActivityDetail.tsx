@@ -1,47 +1,44 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Card, Image, Button } from "semantic-ui-react";
-import { IActivity } from "../../../app/models/activity";
 import moment from "jalali-moment";
+import ActivityStore from "../../../app/stores/activityStore";
+import { observer } from "mobx-react-lite";
 
-interface IProps {
-  activity: IActivity;
-  setEditMode: (editMode: boolean) => void;
-  setSelectedActivity: (activity: IActivity | null) => void;
-}
-
-export const ActivityDetail: React.FC<IProps> = ({
-  activity,
-  setEditMode,
-  setSelectedActivity
-}) => {
+const ActivityDetail: React.FC = () => {
+  const activityStore = useContext(ActivityStore);
+  const {
+    selectedActivity: activity,
+    openEditForm,
+    cancelSelectedActivity
+  } = activityStore;
   return (
     <Card fluid>
       <Image
-        src={`/assets/categoryImages/${activity.category}.jpg`}
+        src={`/assets/categoryImages/${activity!.category}.jpg`}
         wrapped
         ui={false}
       />
       <Card.Content>
-        <Card.Header>{activity.title}</Card.Header>
+        <Card.Header>{activity!.title}</Card.Header>
         <Card.Meta>
           <span>
-            {moment(activity.date, "YYYY/MM/DD")
+            {moment(activity!.date, "YYYY/MM/DD")
               .locale("fa")
               .format("YYYY/MM/DD")}
           </span>
         </Card.Meta>
-        <Card.Description>{activity.description}</Card.Description>
+        <Card.Description>{activity!.description}</Card.Description>
       </Card.Content>
       <Card.Content extra>
         <Button.Group widths={3}>
           <Button
-            onClick={() => setEditMode(true)}
+            onClick={() => openEditForm(activity!.id)}
             basic
             color="blue"
             content="ویرایش"
           />
           <Button
-            onClick={() => setSelectedActivity(null)}
+            onClick={() => cancelSelectedActivity()}
             basic
             color="grey"
             content="انصراف"
@@ -51,3 +48,5 @@ export const ActivityDetail: React.FC<IProps> = ({
     </Card>
   );
 };
+
+export default observer(ActivityDetail);
