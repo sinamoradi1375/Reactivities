@@ -1,16 +1,30 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Card, Image, Button } from "semantic-ui-react";
-import moment from "jalali-moment";
+// import moment from "jalali-moment";
 import ActivityStore from "../../../app/stores/activityStore";
 import { observer } from "mobx-react-lite";
+import { RouteComponentProps, Link } from "react-router-dom";
+import { LoadingComponent } from "../../../app/layout/LoadingComponent";
+import Common from "../../../app/helpers/common";
 
-const ActivityDetail: React.FC = () => {
+interface DetailParams {
+  id: string;
+}
+
+const ActivityDetail: React.FC<RouteComponentProps<DetailParams>> = ({
+  match,
+  history
+}) => {
   const activityStore = useContext(ActivityStore);
-  const {
-    selectedActivity: activity,
-    openEditForm,
-    cancelSelectedActivity
-  } = activityStore;
+  const { activity, loadActivity, loadingInitial } = activityStore;
+
+  useEffect(() => {
+    loadActivity(match.params.id);
+  }, [loadActivity, match.params.id]);
+
+  if (loadingInitial || !activity)
+    return <LoadingComponent content="بارگذاری رویداد..." />;
+
   return (
     <Card fluid>
       <Image
@@ -21,24 +35,21 @@ const ActivityDetail: React.FC = () => {
       <Card.Content>
         <Card.Header>{activity!.title}</Card.Header>
         <Card.Meta>
-          <span>
-            {moment(activity!.date, "YYYY/MM/DD")
-              .locale("fa")
-              .format("YYYY/MM/DD")}
-          </span>
+          <span>{Common.ConvertGregorianToJalaliDate(activity.date)}</span>
         </Card.Meta>
         <Card.Description>{activity!.description}</Card.Description>
       </Card.Content>
       <Card.Content extra>
         <Button.Group widths={3}>
           <Button
-            onClick={() => openEditForm(activity!.id)}
+            as={Link}
+            to={`/editActivity/${activity.id}`}
             basic
             color="blue"
             content="ویرایش"
           />
           <Button
-            onClick={() => cancelSelectedActivity()}
+            onClick={() => history.push("/activities")}
             basic
             color="grey"
             content="انصراف"
