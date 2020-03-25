@@ -1,5 +1,5 @@
 import React, { useState, FormEvent, useContext, useEffect } from "react";
-import { Segment, Form, Button } from "semantic-ui-react";
+import { Segment, Form, Button, Grid } from "semantic-ui-react";
 import { IActivity } from "../../../app/models/activity";
 import { v4 as uuid } from "uuid";
 import ActivityStore from "../../../app/stores/activityStore";
@@ -80,62 +80,66 @@ const ActivityForm: React.FC<RouteChildrenProps<DetailParams>> = ({
   };
 
   return (
-    <Segment clearing>
-      <Form onSubmit={handleSubmit}>
-        <Form.Input
-          onChange={handleInputChange}
-          name="title"
-          placeholder="عنوان"
-          value={activity.title}
-        />
-        <Form.TextArea
-          onChange={handleInputChange}
-          name="description"
-          rows={2}
-          placeholder="توضیحات"
-          value={activity.description}
-        />
-        <Form.Input
-          onChange={handleInputChange}
-          name="category"
-          placeholder="دسته بندی"
-          value={activity.category}
-        />
-        <Form.Input
-          onChange={handleInputChange}
-          name="date"
-          type="datetime-local"
-          placeholder="تاریخ"
-          style={{ direction: "ltr" }}
-          value={activity.date}
-        />
-        <Form.Input
-          onChange={handleInputChange}
-          name="city"
-          placeholder="شهر"
-          value={activity.city}
-        />
-        <Form.Input
-          onChange={handleInputChange}
-          name="venue"
-          placeholder="محل برگذاری"
-          value={activity.venue}
-        />
-        <Button
-          loading={submitting}
-          positive
-          floated="right"
-          type="submit"
-          content="ثبت"
-        />
-        <Button
-          onClick={() => history.push("/activities")}
-          floated="right"
-          type="button"
-          content="انصراف"
-        />
-      </Form>
-    </Segment>
+    <Grid>
+      <Grid.Column width={10}>
+        <Segment clearing>
+          <Form onSubmit={handleSubmit}>
+            <Form.Input
+              onChange={handleInputChange}
+              name="title"
+              placeholder="عنوان"
+              value={activity.title}
+            />
+            <Form.TextArea
+              onChange={handleInputChange}
+              name="description"
+              rows={2}
+              placeholder="توضیحات"
+              value={activity.description}
+            />
+            <Form.Input
+              onChange={handleInputChange}
+              name="category"
+              placeholder="دسته بندی"
+              value={activity.category}
+            />
+            <Form.Input
+              onChange={handleInputChange}
+              name="date"
+              type="datetime-local"
+              placeholder="تاریخ"
+              style={{ direction: "ltr" }}
+              value={activity.date}
+            />
+            <Form.Input
+              onChange={handleInputChange}
+              name="city"
+              placeholder="شهر"
+              value={activity.city}
+            />
+            <Form.Input
+              onChange={handleInputChange}
+              name="venue"
+              placeholder="محل برگذاری"
+              value={activity.venue}
+            />
+            <Button
+              loading={submitting}
+              positive
+              floated="right"
+              type="submit"
+              content="ثبت"
+            />
+            <Button
+              onClick={() => history.push("/activities")}
+              floated="right"
+              type="button"
+              content="انصراف"
+            />
+          </Form>
+        </Segment>
+      </Grid.Column>
+    </Grid>
   );
 };
 
