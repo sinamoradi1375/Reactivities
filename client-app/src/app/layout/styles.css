@@ -106,3 +106,9 @@ body *:not(i) {
 }
 
 /*end home page styles*/
+
+/* toast styles */
+.Toastify__toast-body {
+  text-align: right;
+}
+/* end toast styles */

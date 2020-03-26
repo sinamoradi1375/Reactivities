@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Persistence;
+using FluentValidation.AspNetCore;
+using API.Middleware;
 
 namespace API
 {
@@ -38,16 +40,21 @@ namespace API
             //start M4 E7 adding mediator as a service
             services.AddMediatR(typeof(List.Handler).Assembly);
             //end M4 E7 adding mediator as a service
-            services.AddControllers();
+            //start M10 E4 Added FluentValidatorConfiguration
+            services.AddControllers().AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<Create>());
+            //end M10 E4 Added FluentValidatorConfiguration
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            //start M10 E9 
+            app.UseMiddleware<ErrorHandlingMiddleware>();
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                // app.UseDeveloperExceptionPage();
             }
+            //end M10 E9
 
             // app.UseHttpsRedirection();
 
