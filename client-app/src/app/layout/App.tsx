@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { Container } from "semantic-ui-react";
 import NavBar from "../../features/Nav/NavBar";
 import ActivityDashboard from "../../features/activities/dashboard/ActivityDashboard";
@@ -30,7 +30,7 @@ const App: React.FC<RouteComponentProps> = ({ location }) => {
                 <Route exact path="/activities" component={ActivityDashboard} />
                 <Route path="/activities/:id" component={ActivityDetail} />
                 <Route
-                  path={["/createActivity", "/editActivity/:id"]}
+                  path={["/createActivity", "/editActivity/:id", "/manage/:id"]}
                   component={ActivityForm}
                   key={location.key}
                 />

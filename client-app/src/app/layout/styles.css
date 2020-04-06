@@ -112,3 +112,44 @@ body *:not(i) {
   text-align: right;
 }
 /* end toast styles */
+
+.DatePicker {
+  width: 100%;
+  /* added this because the semantic ui select goes under the datepicker */
+  z-index: 9;
+}
+
+/* start react modern datepicker calendar */
+
+.responsive-calendar {
+  /* by setting font-size, all the elements will correspond */
+  font-size: 9px !important; /* default to 10px */
+}
+
+@media (max-width: 1500px) {
+  .responsive-calendar {
+    /* commented the default style */
+    /* font-size: 8px !important; */
+    font-size: 7px !important;
+  }
+}
+
+@media (max-width: 1200px) {
+  .responsive-calendar {
+    font-size: 7px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .responsive-calendar {
+    font-size: 6px !important;
+  }
+}
+
+/* Large screens */
+@media (min-width: 2500px) {
+  .responsive-calendar {
+    font-size: 12px !important;
+  }
+}
+/* end react modern datepicker calendar */

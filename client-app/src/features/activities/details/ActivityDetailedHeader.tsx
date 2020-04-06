@@ -2,6 +2,7 @@ import React from "react";
 import { Segment, Image, Item, Button, Header } from "semantic-ui-react";
 import { IActivity } from "../../../app/models/activity";
 import { observer } from "mobx-react-lite";
+import { Link } from "react-router-dom";
 
 const activityImageStyle = {
   filter: "brightness(30%)"
@@ -48,7 +49,12 @@ const ActivityDetailedHeader: React.FC<{ activity: IActivity }> = ({
       <Segment clearing attached="bottom">
         <Button color="teal">پیوستن به رویداد</Button>
         <Button>لغو حضور</Button>
-        <Button color="orange" floated="right">
+        <Button
+          as={Link}
+          to={`/manage/${activity.id}`}
+          color="orange"
+          floated="right"
+        >
           مدیریت رویداد
         </Button>
       </Segment>
