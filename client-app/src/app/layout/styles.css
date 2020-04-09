@@ -129,8 +129,8 @@ body *:not(i) {
 @media (max-width: 1500px) {
   .responsive-calendar {
     /* commented the default style */
-    /* font-size: 8px !important; */
     font-size: 7px !important;
+    /* font-size: 7px !important; */
   }
 }
 

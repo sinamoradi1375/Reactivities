@@ -111,7 +111,12 @@ const ActivityForm: React.FC<RouteChildrenProps<DetailParams>> = ({
                   options={category}
                 />
 
-                <Field component={DateInput} name="date" placeholder="تاریخ" />
+                <Field
+                  component={DateInput}
+                  value="1398/12/12"
+                  name="date"
+                  placeholder="تاریخ"
+                />
                 <Field
                   component={TextInput}
                   name="city"
