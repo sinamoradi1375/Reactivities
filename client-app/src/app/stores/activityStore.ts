@@ -43,7 +43,7 @@ class ActivityStore {
       this.loadingInitial = true;
       const activities = await agent.Activities.list();
       runInAction("loading activities", () => {
-        activities.forEach(activity => {
+        activities.forEach((activity) => {
           activity.date = activity.date.split(".")[0];
           // activity.date = Common.ConvertGregorianToJalaliDate(activity.date);
           this.activityRegistry.set(activity.id, activity);

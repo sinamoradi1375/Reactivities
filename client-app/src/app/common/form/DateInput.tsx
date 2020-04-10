@@ -65,13 +65,14 @@ const DateInput: React.FC<IProps> = ({
     <input
       ref={ref}
       {...input}
-      readOnly
+      // readOnly
       value={
         selectedDay
           ? `${selectedDay.year}/${selectedDay.month}/${selectedDay.day}`
           : ""
       }
       placeholder={placeholder}
+      onChange={() => console.log("mamad")}
     />
   );
 
