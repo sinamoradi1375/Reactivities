@@ -1,22 +1,42 @@
-import React, { useState, FormEvent, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Segment, Form, Button, Grid } from "semantic-ui-react";
-import { IActivity } from "../../../app/models/activity";
+import { ActivityFormValues } from "../../../app/models/activity";
 import { v4 as uuid } from "uuid";
 import ActivityStore from "../../../app/stores/activityStore";
 import { observer } from "mobx-react-lite";
-import { RouteChildrenProps } from "react-router-dom";
+import { RouteComponentProps } from "react-router";
 import { Form as FinalForm, Field } from "react-final-form";
 import TextInput from "../../../app/common/form/TextInput";
-import { TextAreaInput } from "../../../app/common/form/TextAreaInput";
+import TextAreaInput from "../../../app/common/form/TextAreaInput";
 import { SelectInput } from "../../../app/common/form/SelectInput";
-import { category } from "../../../app/common/options/categoryOptions";
 import DateInput from "../../../app/common/form/DateInput";
+import { category } from "../../../app/common/options/categoryOptions";
+import { combineDateAndTime } from "../../../app/common/util/util";
+import {
+  combineValidators,
+  isRequired,
+  composeValidators,
+  hasLengthGreaterThan,
+} from "revalidate";
+
+const validate = combineValidators({
+  title: isRequired({ message: "لطفا عنوان را وارد کنید" }),
+  category: isRequired("دسته بندی"),
+  description: composeValidators(
+    isRequired({ message: "لطفا توضیحات را وارد کنید" }),
+    hasLengthGreaterThan(4)({ message: "توضیحات حداقل باید 4 کاراکتر باشند" })
+  )(),
+  city: isRequired({ message: "لطفا شهر را وارد کنید" }),
+  venue: isRequired({ message: "لطفا محل برگذاری را وارد کنید" }),
+  date: isRequired({ message: "لطفا تاریخ را انتخاب کنید" }),
+  time: isRequired({ message: "لطفا زمان را انتخاب کنید" }),
+});
 
 interface DetailParams {
   id: string;
 }
 
-const ActivityForm: React.FC<RouteChildrenProps<DetailParams>> = ({
+const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({
   match,
   history,
 }) => {
@@ -25,61 +45,34 @@ const ActivityForm: React.FC<RouteChildrenProps<DetailParams>> = ({
     createActivity,
     editActivity,
     submitting,
-    activity: initialFormState,
     loadActivity,
-    clearActivity,
   } = activityStore;
 
-  const [activity, setActivity] = useState<IActivity>({
-    id: "",
-    title: "",
-    category: "",
-    description: "",
-    date: "",
-    city: "",
-    venue: "",
-  });
-
-  const matchParamsId = match?.params.id;
+  const [activity, setActivity] = useState(new ActivityFormValues());
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (matchParamsId && activity.id.length === 0) {
-      loadActivity(matchParamsId).then(() => {
-        initialFormState && setActivity(initialFormState);
-      });
+    if (match.params.id) {
+      setLoading(true);
+      loadActivity(match.params.id)
+        .then((activity) => setActivity(new ActivityFormValues(activity)))
+        .finally(() => setLoading(false));
     }
-
-    return () => {
-      clearActivity();
-    };
-  }, [
-    loadActivity,
-    match,
-    clearActivity,
-    matchParamsId,
-    initialFormState,
-    activity.id.length,
-  ]);
-
-  // const handleSubmit = () => {
-  //   if (activity.id.length === 0) {
-  //     let newActivity = {
-  //       ...activity,
-  //       id: uuid()
-  //     };
-
-  //     createActivity(newActivity).then(() =>
-  //       history.push(`/activities/${newActivity.id}`)
-  //     );
-  //   } else {
-  //     editActivity(activity).then(() =>
-  //       history.push(`/activities/${activity.id}`)
-  //     );
-  //   }
-  // };
+  }, [loadActivity, match.params.id]);
 
   const handleFinalFormSubmit = (values: any) => {
-    console.log(values);
+    const dateAndTime = combineDateAndTime(values.date, values.time);
+    const { date, time, ...activity } = values; //the activity object now contains of all its properties except the date and time because of the spread operator that we used;
+    activity.date = dateAndTime;
+    if (!activity.id) {
+      let newActivity = {
+        ...activity,
+        id: uuid(),
+      };
+      createActivity(newActivity);
+    } else {
+      editActivity(activity);
+    }
   };
 
   return (
@@ -87,9 +80,11 @@ const ActivityForm: React.FC<RouteChildrenProps<DetailParams>> = ({
       <Grid.Column width={10}>
         <Segment clearing>
           <FinalForm
+            validate={validate}
             onSubmit={handleFinalFormSubmit}
-            render={({ handleSubmit }) => (
-              <Form onSubmit={handleSubmit}>
+            initialValues={activity}
+            render={({ handleSubmit, invalid, pristine }) => (
+              <Form onSubmit={handleSubmit} loading={loading}>
                 <Field
                   name="title"
                   placeholder="عنوان"
@@ -110,32 +105,53 @@ const ActivityForm: React.FC<RouteChildrenProps<DetailParams>> = ({
                   component={SelectInput}
                   options={category}
                 />
+                <Form.Group widths="equal">
+                  <Field
+                    name="date"
+                    component={DateInput}
+                    placeholder="تاریخ"
+                    value={activity.date}
+                    date={true}
+                  />
+                  <Field
+                    name="time"
+                    component={DateInput}
+                    placeholder="زمان"
+                    value={activity.time}
+                    time={true}
+                  />
+                </Form.Group>
 
-                <Field component={DateInput} name="date" placeholder="تاریخ" />
                 <Field
-                  component={TextInput}
                   name="city"
                   placeholder="شهر"
                   value={activity.city}
+                  component={TextInput}
                 />
                 <Field
-                  component={TextInput}
                   name="venue"
                   placeholder="محل برگذاری"
                   value={activity.venue}
+                  component={TextInput}
                 />
                 <Button
                   loading={submitting}
-                  positive
                   floated="right"
+                  positive
                   type="submit"
                   content="ثبت"
+                  disabled={loading || invalid || pristine}
                 />
                 <Button
-                  onClick={() => history.push("/activities")}
+                  onClick={
+                    activity.id
+                      ? () => history.push(`/activities/${activity.id}`)
+                      : () => history.push("/activities")
+                  }
                   floated="right"
                   type="button"
                   content="انصراف"
+                  disabled={loading}
                 />
               </Form>
             )}

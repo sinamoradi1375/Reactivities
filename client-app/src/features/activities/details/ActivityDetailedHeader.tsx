@@ -3,9 +3,10 @@ import { Segment, Image, Item, Button, Header } from "semantic-ui-react";
 import { IActivity } from "../../../app/models/activity";
 import { observer } from "mobx-react-lite";
 import { Link } from "react-router-dom";
+import { format } from "date-fns";
 
 const activityImageStyle = {
-  filter: "brightness(30%)"
+  filter: "brightness(30%)",
 };
 
 const activityImageTextStyle = {
@@ -14,11 +15,11 @@ const activityImageTextStyle = {
   right: "5%",
   width: "100%",
   height: "auto",
-  color: "white"
+  color: "white",
 };
 
 const ActivityDetailedHeader: React.FC<{ activity: IActivity }> = ({
-  activity
+  activity,
 }) => {
   return (
     <Segment.Group>
@@ -37,7 +38,7 @@ const ActivityDetailedHeader: React.FC<{ activity: IActivity }> = ({
                   content={activity.title}
                   style={{ color: "white" }}
                 />
-                <p>{activity.date}</p>
+                <p>{format(activity.date, "eeee do MMMM")}</p>
                 <p>
                   برگذاری توسط <strong>الماس شرق</strong>
                 </p>

@@ -3,19 +3,19 @@ import { FieldRenderProps } from "react-final-form";
 import { FormFieldProps, Form, Label } from "semantic-ui-react";
 
 interface IProps
-  extends FieldRenderProps<string, HTMLElement>,
+  extends FieldRenderProps<string, HTMLTextAreaElement>,
     FormFieldProps {}
 
-export const TextAreaInput: React.FC<IProps> = ({
+const TextAreaInput: React.FC<IProps> = ({
   input,
   width,
   placeholder,
   rows,
-  meta: { touched, error }
+  meta: { touched, error },
 }) => {
   return (
     <Form.Field error={touched && !!error} width={width}>
-      <textarea rows={rows} {...input} placeholder={placeholder} />
+      <textarea rows={rows} {...input} placeholder={placeholder}></textarea>
       {touched && error && (
         <Label basic color="red">
           {error}
@@ -24,3 +24,5 @@ export const TextAreaInput: React.FC<IProps> = ({
     </Form.Field>
   );
 };
+
+export default TextAreaInput;

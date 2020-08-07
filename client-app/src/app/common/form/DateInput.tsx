@@ -1,89 +1,32 @@
-// import React, { useState } from "react";
-// import DatePicker, { DayValue } from "react-modern-calendar-datepicker";
-// import { FieldRenderProps } from "react-final-form";
-// import { FormFieldProps, Form, Label } from "semantic-ui-react";
-
-// interface IProps
-//   extends FieldRenderProps<string, HTMLElement>,
-//     FormFieldProps {}
-
-// const DateInput: React.FC<IProps> = ({
-//   input,
-//   width,
-//   type,
-//   placeholder,
-//   meta: { touched, error },
-//   ...rest
-// }) => {
-//   const [selectedDay, setSelectedDay] = useState<DayValue>(null);
-
-//   const renderCustomInput = ({ ref }: { ref: any }) => (
-//     <input ref={ref} readOnly value={input.value} placeholder={placeholder} />
-//   );
-
-//   return (
-//     <Form.Field error={touched && !!error} type={type} width={width}>
-//       <DatePicker
-//         value={selectedDay!}
-//         onChange={input.onChange}
-//         renderInput={renderCustomInput} // render a custom input
-//         shouldHighlightWeekends
-//         locale="fa"
-//         calendarClassName="responsive-calendar"
-//         {...rest}
-//       />
-//       {touched && error && (
-//         <Label basic color="red">
-//           {error}
-//         </Label>
-//       )}
-//     </Form.Field>
-//   );
-// };
-
-// export default DateInput;
-
-import React, { useState } from "react";
-import DatePicker, { DayValue } from "react-modern-calendar-datepicker";
+import React from "react";
 import { FieldRenderProps } from "react-final-form";
 import { FormFieldProps, Form, Label } from "semantic-ui-react";
+import { DateTimePicker } from "react-widgets";
 
 interface IProps
-  extends FieldRenderProps<string, HTMLElement>,
+  extends FieldRenderProps<Date, HTMLInputElement>,
     FormFieldProps {}
 
 const DateInput: React.FC<IProps> = ({
   input,
   width,
-  type,
   placeholder,
+  date = false,
+  time = false,
   meta: { touched, error },
+  ...rest
 }) => {
-  const [selectedDay, setSelectedDay] = useState<DayValue>(null);
-
-  const renderCustomInput = ({ ref }: { ref: any }) => (
-    <input
-      ref={ref}
-      {...input}
-      readOnly
-      value={
-        selectedDay
-          ? `${selectedDay.year}/${selectedDay.month}/${selectedDay.day}`
-          : ""
-      }
-      placeholder={placeholder}
-    />
-  );
-
   return (
-    <Form.Field error={touched && !!error} type={type} width={width}>
-      <DatePicker
-        value={selectedDay!}
-        onChange={setSelectedDay}
-        renderInput={renderCustomInput} // render a custom input
-        shouldHighlightWeekends
-        locale="fa"
-        calendarClassName="responsive-calendar"
+    <Form.Field error={touched && !!error} width={width}>
+      <DateTimePicker
+        placeholder={placeholder}
+        value={input.value || null}
+        onChange={input.onChange}
+        {...rest}
+        date={date}
+        time={time}
+        onBlur={input.onBlur}
+        onKeyDown={(e) => e.preventDefault()}
       />
       {touched && error && (
         <Label basic color="red">

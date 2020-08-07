@@ -13,8 +13,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react",
+    "jsx": "preserve",
     "experimentalDecorators": true
   },
-  "include": ["src"]
+  "include": ["src", "./typings-custom/**/*.ts"]
 }

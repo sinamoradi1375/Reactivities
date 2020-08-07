@@ -2,10 +2,8 @@ import React from "react";
 import { FieldRenderProps } from "react-final-form";
 import { FormFieldProps, Form, Label } from "semantic-ui-react";
 
-//the main interface that neil wrote
-// interface IProps extends FieldRenderProps<string, HTMLInputElement>, FormFieldProps {}
 interface IProps
-  extends FieldRenderProps<string, HTMLElement>,
+  extends FieldRenderProps<string, HTMLInputElement>,
     FormFieldProps {}
 
 const TextInput: React.FC<IProps> = ({
@@ -15,7 +13,6 @@ const TextInput: React.FC<IProps> = ({
   placeholder,
   meta: { touched, error },
 }) => {
-  //M11 E3 M3 explaining two exclamation marks
   return (
     <Form.Field error={touched && !!error} type={type} width={width}>
       <input {...input} placeholder={placeholder} />

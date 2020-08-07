@@ -1,13 +1,13 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment } from "react";
 import { Container } from "semantic-ui-react";
-import NavBar from "../../features/Nav/NavBar";
+import NavBar from "../../features/nav/NavBar";
 import ActivityDashboard from "../../features/activities/dashboard/ActivityDashboard";
 import { observer } from "mobx-react-lite";
 import {
   Route,
   withRouter,
   RouteComponentProps,
-  Switch
+  Switch,
 } from "react-router-dom";
 import { HomePage } from "../../features/home/HomePage";
 import ActivityForm from "../../features/activities/form/ActivityForm";
